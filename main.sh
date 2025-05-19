@@ -13,7 +13,7 @@ wandb_entity=your_wandb_entity
 wandb_project=your_wandb_project
 
 seed=0
-epochs=1
+epochs=200
 
 CUDA_VISIBLE_DEVICES=$GPU_ID python ${method}.py --wandb_name ${method}_${beta}_${igdm_alpha}_${seed}_${epochs}_${teacher} --beta $beta --igdm_alpha $igdm_alpha --nowand $nowand --wandb_project $wandb_project --wandb_entity $wandb_entity --method $method --epochs $epochs --teacher_name $teacher_name --student $student --dataset $dataset --seed $seed
 
