@@ -2,14 +2,13 @@ import os
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.optim.swa_utils import AveragedModel, update_bn
 import numpy as np
 import time
 from status import ProgressBar
 from args import create_parser
 from autoattack import AutoAttack
 from utils import *
-from attacks import saad_inner_loss, cw_Linf_attack, FGSM, PGD
+from attacks import *
 try:
     import wandb
 except ImportError:
@@ -38,9 +37,7 @@ teacher.eval()
 
 optimizer = torch.optim.SGD(student.parameters(), lr=args.lr, momentum=0.9, weight_decay=2e-4)
 progress_bar = ProgressBar()
-swa_model = AveragedModel(student)
-swa_start = int(args.swa_epoch)
-
+criterion_kl = nn.KLDivLoss(reduction="batchmean")
 
 # ---------- Train -----------
 for epoch in range(1, args.epochs + 1):
@@ -50,61 +47,27 @@ for epoch in range(1, args.epochs + 1):
         X = X.cuda().float()
         y = y.cuda()
 
-        with torch.no_grad():
-            teacher_clean = teacher(X)
-
-        inputs_adv = saad_inner_loss(student,teacher,X,y,optimizer,step_size=2/255.0,epsilon=8/255.0,perturb_steps=10, beta=args.lambda_inner)
-
+        inputs_adv = PGD(X, y, student, eps=8/255, alpha=2/255, steps=10)
         optimizer.zero_grad()
         with torch.no_grad():
-            delta = inputs_adv - X
-            teacher_plus = teacher(inputs_adv)
-            teacher_minus = teacher(X - delta)
-
+            teacher_logit = teacher(X)
         student_plus = student(inputs_adv)
-        student_minus = student(X - delta)
-        student_clean = student(X)
-
-        teacher_ent_per = samplewise_renyi_entropy(teacher_plus, args.gamma) # shape [B]
-        kl_adv_per_sample = samplewise_kl_div(student_plus, teacher_plus) 
-        kl_clean_per_sample = samplewise_kl_div(student_clean, teacher_clean)
-
-        #args.igdm_alpha = 1 for cifar10, 10 for cifar100, tinyimagenet
-        IGDM_loss_per_sample = args.igdm_alpha * (epoch/args.epochs) * samplewise_kl_div(student_plus - student_minus, teacher_plus - teacher_minus) # shape [B]
-        
-        min_ent = teacher_ent_per.min().item()           # float
-        w = 5*(teacher_ent_per - min_ent)  # shape [B]
-        w = torch.clamp(w, min=0.0) 
-        w_norm = (w - w.min()) / (w.max() - w.min() + 1e-8)
-
-
-        weighted_kl = w * ( kl_adv_per_sample +  IGDM_loss_per_sample) + args.beta * (1 - w_norm) * kl_clean_per_sample
-        kl_loss = weighted_kl.mean()  # batch mean
-
-        loss = kl_loss
+        loss = criterion_kl(F.log_softmax(student_plus, dim=1), F.softmax(teacher_logit, dim=1))
         loss.backward()
         optimizer.step()
         progress_bar.prog(step, len(trainloader), epoch, loss.item())
 
     # ---------- Evaluation per Epoch-----------
     if epoch %1 ==0 :
-        if epoch >= swa_start:
-            print("\n--- Evaluating SWA model for epoch {} ---".format(epoch))
-            swa_model.update_parameters(student)
-            update_bn(trainloader, swa_model, device='cuda')
-            eval_model = swa_model
-        else:
-            eval_model = student
-
         test_accs = []
         test_accs_adv = []
-        eval_model.eval()
+        student.eval()
         for step,(X,y) in enumerate(testloader):
-            test_pgd_data = PGD(X, y, eval_model, eps=8/255, alpha=2/255, steps=20)
-            eval_model.eval()
+            test_pgd_data = PGD(X, y, student, eps=8/255, alpha=2/255, steps=20)
+            student.eval()
             with torch.no_grad():
-                logits = eval_model(X)
-                logits_adv = eval_model(test_pgd_data)
+                logits = student(X)
+                logits_adv = student(test_pgd_data)
             
             predictions_adv = np.argmax(logits_adv.cpu().detach().numpy(),axis=1)
             predictions_adv = predictions_adv - y.cpu().detach().numpy()
@@ -129,9 +92,6 @@ for epoch in range(1, args.epochs + 1):
         for param_group in optimizer.param_groups:
             param_group['lr'] *= 0.1
 
-
-update_bn(trainloader, swa_model, device='cuda')
-
 torch.cuda.empty_cache()
 
 # ---------- Final Evaluation -----------
@@ -139,19 +99,19 @@ test_accs = []
 test_accs_pgd = []
 test_accs_cw = []
 test_accs_fgsm = []
-swa_model.eval()
+student.eval()
 for step,(X,y) in enumerate(testloader):
     X = X.cuda().float()
     y = y.cuda()
-    inputs_cw = cw_Linf_attack(X, y, swa_model, eps=8/255, alpha=2/255)
-    inputs_fgsm = FGSM(X, y, swa_model, eps=8/255)
-    inputs_pgd = PGD(X, y, swa_model, eps=8/255, alpha=2/255, steps=20, random_start=True)
-    swa_model.eval()
+    inputs_cw = cw_Linf_attack(X, y, student, eps=8/255, alpha=2/255)
+    inputs_fgsm = FGSM(X, y, student, eps=8/255)
+    inputs_pgd = PGD(X, y, student, eps=8/255, alpha=2/255, steps=20, random_start=True)
+    student.eval()
     with torch.no_grad():
-        logits = swa_model(X)
-        logits_cw = swa_model(inputs_cw)
-        logits_fgsm = swa_model(inputs_fgsm)
-        logits_pgd = swa_model(inputs_pgd)
+        logits = student(X)
+        logits_cw = student(inputs_cw)
+        logits_fgsm = student(inputs_fgsm)
+        logits_pgd = student(inputs_pgd)
     
     predictions_pgd = np.argmax(logits_pgd.cpu().detach().numpy(),axis=1)
     predictions_pgd = predictions_pgd - y.cpu().detach().numpy()
@@ -190,10 +150,10 @@ save_time = time.strftime('%Y-%m-%d', time.localtime(time.time()))
 save_dir = './result_models/'
 os.makedirs(save_dir, exist_ok=True)
 save_path = os.path.join(save_dir, args.wandb_name + save_time + str(args.student) + '.pt')
-torch.save(swa_model.state_dict(), save_path)
+torch.save(student.state_dict(), save_path)
 
-swa_model.eval()
-autoattack = AutoAttack(swa_model, norm='Linf', eps=8/255.0, version='standard')
+student.eval()
+autoattack = AutoAttack(student, norm='Linf', eps=8/255.0, version='standard')
 x_total = [x for (x, y) in testloader]
 y_total = [y for (x, y) in testloader]
 x_total = torch.cat(x_total, 0)

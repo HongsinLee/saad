@@ -40,6 +40,17 @@ def samplewise_kl_div(input_logits, target_logits):
     kl_per = F.kl_div(logq, p, reduction='none').sum(dim=1)  # [B]
     return kl_per
 
+def samplewise_renyi_entropy(logits, alpha=2.0, eps=1e-12):
+    """
+    logits : [B, C]
+    return : Tensor [B] – Rényi entropy H_α(p)
+    """
+    p = F.softmax(logits, dim=1)          # 확률
+    if abs(alpha - 1.0) < 1e-6:           # α≃1 ⇒ Shannon
+        return -(p * torch.log(p + eps)).sum(dim=1)
+
+    log_sum = torch.log((p ** alpha).sum(dim=1) + eps)   # log Σ p_c^α
+    return log_sum / (1.0 - alpha)
 
 
 

@@ -8,6 +8,8 @@ def create_parser():
                         help='igdm_loss')
     parser.add_argument('--beta', type=float,
                         help='beta')
+    parser.add_argument('--gamma', type=float,
+                        help='gamma')
     parser.add_argument('--entropy_scale', type=float,default=5,
                         help='entropy_scale')
     parser.add_argument('--lambda_inner', type=float, default=1,
