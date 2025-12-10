@@ -4,7 +4,7 @@ dataset=cifar10
 teacher_name=Gowal2021Improving_28_10_ddpm_100m  
 student=RES-18
 
-method=igdm
+method=saad
 igdm_alpha=1
 beta=0
 gamma=1
@@ -14,7 +14,7 @@ wandb_entity=your_wandb_entity
 wandb_project=your_wandb_project
 
 seed=0
-epochs=1
+epochs=200
 
 CUDA_VISIBLE_DEVICES=$GPU_ID python ${method}.py --wandb_name ${method}_${beta}_${igdm_alpha}_${seed}_${epochs}_${teacher} --beta $beta --gamma $gamma --igdm_alpha $igdm_alpha --nowand $nowand --wandb_project $wandb_project --wandb_entity $wandb_entity --method $method --epochs $epochs --teacher_name $teacher_name --student $student --dataset $dataset --seed $seed
 
