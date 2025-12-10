@@ -5,7 +5,7 @@ This repository contains the official implementation of the paper
 
 **TL;DR**
 
-- Stronger robust teachers do not necessarily yield more robust students; the missing factor is **sample-wise adversarial transferability (TAS)** from student to teacher.
+- Stronger robust teachers do not necessarily yield more robust students; the missing factor is **sample-wise adversarial transferability** from student to teacher.
 - We propose **SAAD (Sample-wise Adaptive Adversarial Distillation)**, which **up-weights transferable samples and down-weights non-transferable, high-variance samples** using a cheap entropy-based proxy.
 
 <div align="center">
@@ -19,12 +19,12 @@ This repository contains the official implementation of the paper
 All experiments in this repo were run with:
 
 - Python 3.8
-- PyTorch 2.1.0
+- PyTorch 2.4.1
 
 Install the necessary packages using pip:
 
 ```bash
-pip install torch>=2.1.0 torchvision numpy wandb
+pip install torch torchvision numpy wandb
 ```
 
 For loading pre-trained models as teacher model, we rely on RobustBench.
