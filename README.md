@@ -5,16 +5,7 @@ This repository contains the official code of the paper: **"Sample-wise Adaptive
 In this work, we propose **SAAD (Sample-wise Adaptive Adversarial Distillation)**, a method designed to improve adversarial robustness by adaptively weighting sample-wise transfer consistency. This repository also provides implementations of several state-of-the-art adversarial distillation methods.
 
 <div align="center">
-<img src="figure/intro.pdf" width="97%" alt="Student AA accuracy vs. Teacher AA accuracy." />
-<p><i>(a) Student AA accuracy vs. Teacher AA accuracy.</i></p>
-
-<img src="figure/intro_architecture.pdf" width="97%" alt="Student AA accuracy vs. Teacher architecture size." />
-<p><i>(b) Student AA accuracy vs. Teacher architecture size. Colored regions represent the same architectures.</i></p>
-
-<img src="figure/sorted_intro.pdf" width="97%" alt="Student AA accuracy vs. Fraction of adversarial examples that transfer from student to teacher (TAS)." />
-<p><i>(c) Student AA accuracy vs. Fraction of adversarial examples that transfer from student to teacher (TAS).</i></p>
-
-<p><b>Figure 1:</b> Adversarial distillation results on CIFAR-10 with a ResNet-18 student. Detailed teacher information and full experimental results are provided in the paper.</p>
+<img src="figure/intro.png" width="97%" alt="Student AA accuracy vs. Teacher AA accuracy." />
 </div>
 
 ---
