@@ -2,6 +2,7 @@
 
 This repository contains the official implementation of the paper  
 **"Sample-wise Adaptive Weighting for Transfer Consistency in Adversarial Distillation"**.
+[Paper Link](https://arxiv.org/abs/2512.10275)
 
 **TL;DR**
 
