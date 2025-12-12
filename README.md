@@ -42,7 +42,7 @@ This repository includes implementations of the following adversarial distillati
 | **RSLAD** | Revisiting Adversarial Robustness Distillation: Robust Soft Labels Make Student Better | [link](https://arxiv.org/abs/2108.07969) |
 | **AdaAD** | Boosting Accuracy and Robustness of Student Models via Adaptive Adversarial Distillation | [link](https://openaccess.thecvf.com/content/CVPR2023/html/Huang_Boosting_Accuracy_and_Robustness_of_Student_Models_via_Adaptive_Adversarial_CVPR_2023_paper.html) |
 | **IGDM (Ours)**  | Indirect Gradient Matching for Adversarial Robust Distillation | [Link](https://arxiv.org/abs/2312.03286) |
-| **SAAD (Ours)** | **Sample-wise Adaptive Weighting for Transfer Consistency in Adversarial Distillation** | ...  |
+| **SAAD (Ours)** | **Sample-wise Adaptive Weighting for Transfer Consistency in Adversarial Distillation** | [Link](https://arxiv.org/abs/2512.10275)  |
 
 ---
 
