@@ -1,8 +1,8 @@
 # Sample-wise Adaptive Weighting for Transfer Consistency in Adversarial Distillation
 
-This repository contains the official implementation of the paper  
+This repository contains the official implementation of the TMLR paper  
 **"Sample-wise Adaptive Weighting for Transfer Consistency in Adversarial Distillation"**.
-[Paper Link](https://arxiv.org/abs/2512.10275)
+[Paper Link](https://arxiv.org/abs/2512.10275) | [OpenReview](https://openreview.net/forum?id=ek45VamPCE)
 
 **TL;DR**
 
@@ -28,8 +28,8 @@ Install the necessary packages using pip:
 pip install torch torchvision numpy wandb
 ```
 
-For loading pre-trained models as teacher model, we rely on RobustBench.
-Please visit the official repository to download in [RobustBench Repository](https://github.com/RobustBench/robustbench).
+For loading pre-trained teacher models, we rely on RobustBench.
+Please visit the [RobustBench repository](https://github.com/RobustBench/robustbench) for setup and model downloads.
 
 ---
 
@@ -42,7 +42,7 @@ This repository includes implementations of the following adversarial distillati
 | **ARD** | Adversarially Robust Distillation | [Link](https://arxiv.org/abs/1905.09747) |
 | **RSLAD** | Revisiting Adversarial Robustness Distillation: Robust Soft Labels Make Student Better | [Link](https://arxiv.org/abs/2108.07969) |
 | **AdaAD** | Boosting Accuracy and Robustness of Student Models via Adaptive Adversarial Distillation | [Link](https://openaccess.thecvf.com/content/CVPR2023/html/Huang_Boosting_Accuracy_and_Robustness_of_Student_Models_via_Adaptive_Adversarial_CVPR_2023_paper.html) |
-| **IGDM (Ours)**  | Indirect Gradient Matching for Adversarial Robust Distillation | [Link](https://arxiv.org/abs/2312.03286) |
+| **IGDM**  | Indirect Gradient Matching for Adversarial Robust Distillation | [Link](https://arxiv.org/abs/2312.03286) |
 | **SAAD (Ours)** | **Sample-wise Adaptive Weighting for Transfer Consistency in Adversarial Distillation** | [Link](https://arxiv.org/abs/2512.10275)  |
 
 ---
@@ -56,4 +56,4 @@ bash main.sh
 
 ## Contact
 
-If you have questions about **IGDM** or **SAAD**, please feel free to open a GitHub issue.
+If you have questions about **SAAD**, please feel free to open a GitHub issue.
