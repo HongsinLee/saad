@@ -15,6 +15,15 @@ This repository contains the official implementation of the TMLR paper
 
 ---
 
+## Follow-up Work
+
+For a theoretical understanding of why robust teachers can fail in adversarial distillation, please see our follow-up work:
+
+**Toward Understanding Adversarial Distillation: Why Robust Teachers Fail**  
+Accepted to **ICML 2026**.  
+[Paper Link coming soon]
+
+
 ## Installation
 
 All experiments in this repo were run with:
