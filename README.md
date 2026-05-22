@@ -64,6 +64,18 @@ Run SAAD with the default configuration:
 bash main.sh
 ```
 
-## Contact
 
-If you have questions about **SAAD**, please feel free to open a GitHub issue.
+## Citation
+
+If you find this repository useful, please cite:
+
+```bibtex
+@article{lee2026samplewise,
+  title={Sample-wise Adaptive Weighting for Transfer Consistency in Adversarial Distillation},
+  author={Hongsin Lee and Hye Won Chung},
+  journal={Transactions on Machine Learning Research},
+  issn={2835-8856},
+  year={2026},
+  url={https://openreview.net/forum?id=ek45VamPCE}
+}
+
