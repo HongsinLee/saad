@@ -21,7 +21,8 @@ For a theoretical understanding of why robust teachers can fail in adversarial d
 
 **Toward Understanding Adversarial Distillation: Why Robust Teachers Fail**  
 Accepted to **ICML 2026**.  
-[Paper Link coming soon]
+[Paper Link](https://arxiv.org/abs/2605.21999) | [OpenReview](https://openreview.net/forum?id=USejwpvj0a) | [GitHub](https://github.com/HongsinLee/why-robust-teachers-fail)
+
 
 
 ## Installation
